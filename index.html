@@ -1,115 +1,152 @@
 <!DOCTYPE html>
 <html lang="fr" dir="ltr">
   <head>
-    <title>M4103C-Projet-JS - Recherche d'offres d'emploi</title>
-    <meta charset="utf-8" />
+    <meta
+      charset="utf-8"
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <title>M4103C-Projet Kilian Houpeurt</title>
+
     <link rel="shortcut icon" type="image/x-icon" href="favicon-js.ico" />
-    <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <header>
-      <h1>Recherche d'offres d'emploi</h1>
+    <div id="root" class="flex h-screen text-gray-900 px-4">
+      <aside class="flex flex-col justify-between flex-shrink-0 py-4 pr-4">
+        <!-- Title -->
+        <header class="mt-16 flex justify-center">
+          <div class="flex justify-between items-center w-56">
+            <span class="text-3xl font-bold pb-1">Geolocation</span>
+          </div>
+        </header>
 
-      <p id="explication">
-        Cette page permet de rechercher des offres d'emploi via l'API publique
-        de <a href="https://www.indeed.fr/" target="_blank">indeed.fr</a>.<br />
-        Saisir le nom d'une ville, d'un poste, ... pour rechercher les postes
-        correspondants, et enregistrer vos recherches favorites pour les
-        retrouver facilement.
-      </p>
-    </header>
-    <hr />
+        <!-- Links -->
+        <nav class="flex justify-center">
+          <div class="flex flex-col justify-between items-center w-48">
+            <span class="font-medium my-3">Favorites</span>
+            <section
+              class="
+                flex flex-col
+                h-48
+                w-48
+                justify-center
+                items-center
+                bg-green-100
+                rounded-2xl
+                border-dotted border-2 border-gray-200
+              "
+            >
+              <p class="font-medium text-gray-500 m-3 text-center text-xs">
+                Drag and drop a geolocation there
+              </p>
+            </section>
+          </div>
+        </nav>
 
-    <main id="conteneur">
-      <!-- Section de recherche (avec résultats) -->
-      <section id="section-recherche">
-        <div id="bloc-recherche">
-          <!-- Champ de recherche -->
-          <input type="text" placeholder="Que cherchez-vous ?" />
+        <!-- Bottom -->
+        <section
+          class="
+            flex flex-col
+            justify-center
+            items-center
+            bg-green-100
+            rounded-2xl
+          "
+        >
+          <p class="font-medium text-gray-500 w-48 m-3 text-center text-xs">
+            This page allows you to search locations arround the word thanks to
+            <a
+              class="text-blue-500"
+              href="https://www.mapbox.com/"
+              target="_blank"
+              >mapbox.com</a
+            >
+          </p>
+        </section>
+      </aside>
 
-          <!-- Boutons -->
-          <button
-            id="btn-lancer-recherche"
-            type="button"
-            class="btn_clicable"
-            title="Lancer la recherche"
+      <section class="bg-gray-200 flex flex-col flex-grow rounded-3xl">
+        <header class="flex justify-end my-8">
+          <section
+            class="
+              w-full
+              xl:w-1/2
+              px-8
+              xl:pr-24 xl:pl-12
+              flex
+              justify-end
+              xl:justify-between
+              items-center
+            "
           >
-            <!-- Icone provenant de flaticon.com -->
-            <img src="images/loupe.svg" alt="Loupe pour recherche" width="22" />
-          </button>
+            <div
+              class="
+                flex
+                mr-12
+                xl:mr-0
+                max-w-80
+                bg-white
+                focus:outline-none focus:shadow-outline
+                rounded-xl
+              "
+            >
+              <input
+                onchange="set_search(this.value)"
+                id="location_search"
+                class="
+                  bg-transparent
+                  appearance-none
+                  w-full
+                  py-4
+                  px-6
+                  pr-16
+                  text-xl text-gray-700
+                  focus:outline-none
+                  outline-none
+                "
+                type="text"
+                placeholder="Search"
+              />
+              <button onclick="search()" class="text-purple-700 px-6">
+                <img alt="search" src="images/search.svg" />
+              </button>
+            </div>
+          </section>
+        </header>
 
-          <button
-            id="btn-favoris"
-            type="button"
-            disabled
-            title="Ajouter la recherche aux favoris"
-          >
-            <!-- Icone étoile vide => Recherche pas en favoris -->
-            <img src="images/etoile-vide.svg" alt="Etoile vide" width="22" />
+        <main class="overflow-y-scroll">
+          <section class="w-full px-8 xl:pl-24 xl:pr-12 flex flex-col">
+            <header class="my-8">
+              <h1 class="text-7xl font-bold">Welcome</h1>
+              <p class="text-3-5xl text-gray-700">
+                By Kilian Houpeurt using Mapbox and Tailwind
+              </p>
+            </header>
 
-            <!-- Icone étoile pleine => Recherche en favoris -->
-            <!-- <img src="images/etoile-pleine.svg" alt="Etoile pleine" width=22 > -->
-
-            <!-- (Icones provenant de flaticon.com) -->
-          </button>
-        </div>
-
-        <!-- Résultats de recherche -->
-        <div id="bloc-gif-attente">
-          <img
-            src="images/attente-ajax.gif"
-            alt="GIF Attente de résultats"
-            width="50"
-          />
-        </div>
-        <div id="bloc-resultats">
-          <p class="res">Résultat 1 ...</p>
-          <p class="res">Résultat 2 ...</p>
-          <p class="res">Résultat 3 ...</p>
-          <p class="info-vide">( &empty; Aucun résultat trouvé )</p>
-        </div>
+            <section
+              class="
+                my-6
+                flex-grow
+                justify-between
+                bg-white
+                rounded-3xl
+                items-center
+                shadow-1xl
+                p-6
+              "
+            >
+              <div id="location_list"></div>
+            </section>
+          </section>
+        </main>
       </section>
+    </div>
 
-      <!-- Section de séparation (avec la bordure verte) -->
-      <section id="section-separation"></section>
-
-      <!-- Section des recherches favorites -->
-      <section id="section-favoris">
-        <h2>Recherches favorites</h2>
-        <p>
-          Cliquer sur une recherche favorite ci-dessus pour relancer celle-ci :
-        </p>
-        <ul id="liste-favoris">
-          <li>
-            <span title="Cliquer pour relancer la recherche">Grenoble</span>
-            <img
-              src="images/croix.svg"
-              alt="Icone pour supprimer le favori"
-              width="15"
-              title="Cliquer pour supprimer le favori"
-            />
-          </li>
-          <li>
-            <span title="Cliquer pour relancer la recherche">Lyon</span>
-            <img
-              src="images/croix.svg"
-              alt="Icone pour supprimer le favori"
-              width="15"
-              title="Cliquer pour supprimer le favori"
-            />
-          </li>
-          <li>
-            <span title="Cliquer pour relancer la recherhe.">Web</span>
-            <img
-              src="images/croix.svg"
-              alt="Icone pour supprimer le favori"
-              width="15"
-              title="Cliquer pour supprimer le favori"
-            />
-          </li>
-        </ul>
-        <p class="info-vide">( &empty; Aucune recherche enregistrée )</p>
-      </section>
-    </main>
+    <script type="text/javascript" src="index.js"></script>
   </body>
 </html>
