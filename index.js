@@ -24,8 +24,11 @@ function search() {
     .catch(() => {});
 }
 
+search();
+
 async function on_search_response(response) {
   const json = await response.json();
+
   console.log(json);
 
   ui_refresh_query(json.query);
@@ -38,11 +41,63 @@ function ui_refresh_locations(features) {
   ui_refresh_empty_div(location_list);
 
   for (const feature of features) {
+    feature.context = feature.context.reduce((value, context_item) => {
+      return {
+        ...value,
+        [context_item.id.split(".")[0]]: {
+          ...context_item,
+          text: context_item.text ?? "",
+        },
+      };
+    }, {});
+
+    const coordinates = { x: feature.center[0], y: feature.center[1] };
+
+    const address = feature.properties.address;
+    const category = feature.properties.category;
+
     location_list.innerHTML += `
-      <div
-        class="flex flex-col bg-white shadow-1xl rounded-3xl my-6 p-6"
-      >
-        ${feature.place_name}
+      <div class="flex flex-col">
+        <div class="flex space-between">
+          <span
+            class="
+              inline-flex
+              items-center
+              justify-center
+              px-2
+              py-1
+              text-xs
+              font-bold
+              leading-none
+              text-red-100
+              bg-red-600
+              rounded-full
+            "
+            >${feature.relevance}</span
+          >
+          <span class="pl-4 mr-auto font-bold">${feature.text}</span>
+          <span class="text-xs mr-5">${category}</span>
+        </div>
+        <div
+          class="bg-white shadow-1xl rounded-3xl my-2 p-4 break-words"
+        >
+        <span class="font-bold">country : </span>${feature.context.country?.text}
+          <br />
+          <span class="font-bold">region : </span> ${feature.context.region?.text}      
+          <br />
+          <span class="font-bold">postcode :</span> ${feature.context.postcode?.text}
+          <br />
+          <span class="font-bold">place : </span> ${feature.context.place?.text}
+          <br />
+          <span class="font-bold">address : </span> ${address}
+          <br />
+          <span class="font-bold">district : </span> ${feature.context.district?.text}
+          <br />
+          <span class="font-bold">neighborhood : </span> ${feature.context.neighborhood?.text}
+        </div>
+        <div>
+          <span class="text-md">${feature.place_name}</span>
+        </div>
       </div>
     `;
   }
