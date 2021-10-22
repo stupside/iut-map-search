@@ -14,39 +14,30 @@
       href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
       rel="stylesheet"
     />
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <div id="root" class="flex h-screen text-gray-900 px-4">
-      <aside class="flex flex-col justify-between flex-shrink-0 py-4 pr-4">
-        <!-- Title -->
-        <header class="mt-16 flex justify-center">
-          <div class="flex justify-between items-center w-56">
+    <div id="root" class="grid grid-cols-10 h-screen text-gray-900 px-4">
+      <!-- Aside -->
+      <aside
+        class="flex flex-col col-span-3 justify-between flex-shrink-0 py-4 pr-4"
+      >
+        <!-- Aside Title -->
+        <header class="mt-8 mb-12 flex justify-center">
+          <div class="flex justify-between items-center">
             <span class="text-3xl font-bold pb-1">Geolocation</span>
           </div>
         </header>
 
-        <!-- Links -->
-        <nav class="flex justify-center">
-          <div class="flex flex-col justify-between items-center w-48">
-            <span class="font-medium my-3">Favorites</span>
-            <section
-              class="
-                flex flex-col
-                h-48
-                w-48
-                justify-center
-                items-center
-                bg-green-100
-                rounded-2xl
-                border-dotted border-2 border-gray-200
-              "
-            >
-              <p class="font-medium text-gray-500 m-3 text-center text-xs">
-                Drag and drop a geolocation there
-              </p>
-            </section>
-          </div>
-        </nav>
+        <!-- Aside Map -->
+        <section class="flex-grow mb-8">
+          <div id="map" class="w-full h-full rounded-xl"></div>
+        </section>
 
         <!-- Bottom -->
         <section
@@ -59,7 +50,7 @@
           "
         >
           <p class="font-medium text-gray-500 w-48 m-3 text-center text-xs">
-            This page allows you to search locations arround the word thanks to
+            This page allows you to search places arround the word with
             <a
               class="text-blue-500"
               href="https://www.mapbox.com/"
@@ -70,7 +61,17 @@
         </section>
       </aside>
 
-      <section class="bg-gray-200 flex flex-col flex-grow rounded-3xl">
+      <!-- Middle Page -->
+      <section
+        class="
+          bg-gray-200
+          col-span-7
+          flex flex-col flex-grow
+          rounded-3xl
+          overflow-hidden
+        "
+      >
+        <!-- Middle Page Header -->
         <header class="flex flex-col items-end my-8">
           <section
             class="
@@ -82,6 +83,7 @@
               items-center
             "
           >
+            <!-- Middle Page Header Search -->
             <div
               class="
                 flex
@@ -96,7 +98,7 @@
               "
             >
               <input
-                onchange="set_search(this.value)"
+                onchange="cache.set_search(this.value)"
                 id="location_search"
                 class="
                   bg-transparent
@@ -112,10 +114,11 @@
                 type="text"
                 placeholder="Search"
               />
-              <button onclick="search()" class="text-purple-700 px-6">
+              <button onclick="mapbox.search()" class="text-purple-700 px-6">
                 <img alt="search" src="images/search.svg" />
               </button>
             </div>
+            <!-- Middle Page Header Search Query -->
             <div
               class="flex w-full justify-end my-2 mx-3"
               id="location_query"
@@ -123,24 +126,30 @@
           </section>
         </header>
 
-        <main class="overflow-y-scroll">
-          <section class="w-full px-8 xl:pl-24 xl:pr-12 flex flex-col">
-            <header class="my-8">
-              <h1 class="text-7xl font-bold">Welcome</h1>
-              <p class="text-3-5xl text-gray-700">
-                By Kilian Houpeurt using Mapbox and Tailwind
-              </p>
-            </header>
-
-            <section
-              id="location_list"
-              class="flex-grow grid grid-cols-2 xs:grid-cols-1 gap-4 p-6"
-            ></section>
-          </section>
+        <!-- Middle Page Content -->
+        <main class="flex flex-col flex-grow h-full overflow-y-scroll">
+          <!-- Middle Page Content List -->
+          <section
+            id="location_list"
+            class="
+              px-8
+              xl:pl-24 xl:pr-12
+              grid grid-cols-1
+              md:grid-cols-2
+              gap-4
+              p-6
+            "
+          ></section>
         </main>
       </section>
     </div>
 
-    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript" src="statics/index.js"></script>
+    <script type="text/javascript" src="statics/cache.js"></script>
+    <script type="text/javascript" src="statics/mapbox/mapbox.js"></script>
+    <script type="text/javascript" src="statics/mapbox/mapbox_gl.js"></script>
+    <script type="text/javascript" src="statics/ui/ui_factory.js"></script>
+    <script type="text/javascript" src="statics/ui/ui.js"></script>
+    <script type="text/javascript" src="statics/favorites.js"></script>
   </body>
 </html>
