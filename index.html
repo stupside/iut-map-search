@@ -98,8 +98,7 @@
               "
             >
               <input
-                onchange="cache.set_search(this.value)"
-                id="location_search"
+                id="search"
                 class="
                   bg-transparent
                   appearance-none
@@ -114,31 +113,22 @@
                 type="text"
                 placeholder="Search"
               />
-              <button onclick="mapbox.search()" class="text-purple-700 px-6">
+              <button id="search_button" class="text-purple-700 px-6">
                 <img alt="search" src="images/search.svg" />
               </button>
             </div>
             <!-- Middle Page Header Search Query -->
-            <div
-              class="flex w-full justify-end my-2 mx-3"
-              id="location_query"
-            ></div>
+            <div class="flex w-full justify-end my-2 mx-3" id="query"></div>
           </section>
         </header>
 
         <!-- Middle Page Content -->
         <main class="flex flex-col flex-grow h-full overflow-y-scroll">
           <!-- Middle Page Content List -->
+          <section id="feature" class="px-8 xl:pl-24 xl:pr-12"></section>
           <section
-            id="location_list"
-            class="
-              px-8
-              xl:pl-24 xl:pr-12
-              grid grid-cols-1
-              md:grid-cols-2
-              gap-4
-              p-6
-            "
+            id="features"
+            class="px-8 xl:pl-24 xl:pr-12 grid grid-cols-1 md:grid-cols-2 gap-4"
           ></section>
         </main>
       </section>

@@ -17,7 +17,9 @@ const CACHE_VARIABLES = {
 };
 
 const UI_VARIABLES = {
-  LOCATION_SEARCH_ID: "location_search",
-  LOCATION_QUERY_ID: "location_query",
-  LOCATION_LIST_ID: "location_list",
+  SEARCH_ID: "search",
+  SEARCH_BUTTON_ID: "search_button",
+  QUERY_ID: "query",
+  FEATURES_ID: "features",
+  FEATURE_ID: "feature",
 };

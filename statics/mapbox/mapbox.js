@@ -1,34 +1,27 @@
 const mapbox = {
-  get_search_endpoint() {
-    const { get_search } = cache;
+  async search(search) {
+    if (!search) {
+      console.info("mapbox.search", "Empty search parameter");
+      return;
+    }
 
-    return encodeURI(
-      `${MAPBOX_VARIABLES.ENDPOINT}/${get_search()}.json?access_token=${
-        MAPBOX_VARIABLES.TOKEN
-      }`
-    );
-  },
-  search() {
-    const url = mapbox.get_search_endpoint();
-    fetch(url)
+    const url = get_search_endpoint(search);
+
+    return fetch(url)
       .then((response) => {
-        on_search_response(response);
+        return response.json();
       })
-      .catch(() => {});
+      .catch((reason) => {
+        console.error("mapbox.search.catch", reason);
+      });
+  },
+  async search_from_cache() {
+    return mapbox.search(cache.get_search());
   },
 };
 
-async function on_search_response(response) {
-  const json = await response.json();
-
-  console.log(json);
-
-  const { add_markers } = mapbox_gl;
-  const { refresh_query, refresh_locations } = ui;
-
-  refresh_query(json.query);
-  refresh_locations(json.features);
-  add_markers(json.features);
-}
-
-mapbox.search();
+const get_search_endpoint = (query) => {
+  return encodeURI(
+    `${MAPBOX_VARIABLES.ENDPOINT}/${query}.json?access_token=${MAPBOX_VARIABLES.TOKEN}`
+  );
+};

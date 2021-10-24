@@ -1,39 +1,67 @@
 const ui = {
-  refresh_locations(features) {
-    const location_list = document.getElementById(
-      UI_VARIABLES.LOCATION_LIST_ID
+  toggle_search(enable) {
+    const search = document.getElementById(UI_VARIABLES.SEARCH_ID);
+    const search_button = document.getElementById(
+      UI_VARIABLES.SEARCH_BUTTON_ID
     );
+    search.disabled = !enable;
+    search_button.disabled = !enable;
+  },
+  refresh_features(features) {
+    const feature = document.getElementById(UI_VARIABLES.FEATURE_ID);
+    const features_list = document.getElementById(UI_VARIABLES.FEATURES_ID);
 
-    ui_refresh_empty_div(location_list);
+    ui_refresh_empty_div(features_list);
+    ui_refresh_empty_div(feature);
 
-    for (const feature of features) {
-      feature.context = feature.context.reduce((value, context_item) => {
-        return {
-          ...value,
-          [context_item.id.split(".")[0]]: {
-            ...context_item,
-            text: context_item.text ?? "",
-          },
-        };
-      }, {});
+    const div = ui_feature(features[0]);
+    feature.appendChild(div);
 
-      location_list.appendChild(ui_location_list_item(feature));
-      ui_location_list_item_zoom_listener(feature);
+    for (const feature of features.slice(1)) {
+      features_list.appendChild(ui_feature(feature));
     }
   },
   refresh_query(query) {
-    const location_query = document.getElementById(
-      UI_VARIABLES.LOCATION_QUERY_ID
-    );
-
+    const location_query = document.getElementById(UI_VARIABLES.QUERY_ID);
     ui_refresh_empty_div(location_query);
 
     for (const query_item of query) {
-      location_query.innerHTML += `
-        <div class="flex bg-blue-300 rounded-2xl py-0.5 px-2 ml-2 text-white">
-          ${query_item}
-        </div>
-        `;
+      location_query.appendChild(ui_query_label(query_item));
     }
   },
 };
+
+function on_search_response(json) {
+  const { add_markers } = mapbox_gl;
+  const { refresh_query, refresh_features } = ui;
+
+  refresh_query(json.query);
+  refresh_features(json.features);
+  add_markers(json.features);
+}
+
+function on_search_change(search) {
+  cache.set_search(search.currentTarget.value);
+}
+
+function on_search_button_click() {
+  const search = document.getElementById(UI_VARIABLES.SEARCH_ID);
+
+  ui.toggle_search(false);
+  mapbox.search(search.value).then((json) => {
+    on_search_response(json);
+    ui.toggle_search(true);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const search = document.getElementById(UI_VARIABLES.SEARCH_ID);
+  const search_button = document.getElementById(UI_VARIABLES.SEARCH_BUTTON_ID);
+
+  search.addEventListener("change", on_search_change);
+  search_button.addEventListener("click", on_search_button_click);
+
+  search.value = cache.get_search();
+
+  mapbox.search_from_cache().then(on_search_response);
+});
