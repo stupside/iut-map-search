@@ -48,19 +48,28 @@ const ui_feature = (feature) => {
     "bg-white shadow-1xl rounded-3xl my-2 p-4 break-words cursor-pointer";
   feature_div_body.id = feature_get_zoom_id(feature);
 
-  ["country", "region", "postcode", "place"].forEach((context) => {
+  const contexts = Object.values(feature.context).reduce(
+    (accumulator, value) => {
+      return {
+        ...accumulator,
+        [value.id.split(".")[0]]: value.text,
+      };
+    },
+    {
+      country: undefined,
+      region: undefined,
+      postcode: undefined,
+      place: undefined,
+    }
+  );
+
+  Object.entries(contexts).forEach(([key, value]) => {
     const span = document.createElement("span");
     span.className = "font-bold";
-    span.innerHTML = context;
-
-    const value = feature.context
-      ? Object.entries(feature.context).find(([_, value]) => {
-          return value.id.includes(context);
-        })
-      : undefined;
+    span.innerHTML = key;
 
     feature_div_body.appendChild(span);
-    span.insertAdjacentHTML("afterEnd", `: <span>${value?.text}<span/><br />`);
+    span.insertAdjacentHTML("afterEnd", `: <span>${value}<span/><br />`);
   });
 
   feature_div_body.insertAdjacentHTML(
