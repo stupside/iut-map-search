@@ -9,7 +9,7 @@ const ui_query_label = (value) => {
 const ui_feature = (feature) => {
   const container = () => {
     const div = document.createElement("div");
-    div.className = "flex flex-col hover:bg-gray-100 rounded-xl p-3";
+    div.className = "flex flex-col hover:bg-gray-100 rounded-xl p-3 ";
 
     return div;
   };
@@ -44,22 +44,29 @@ const ui_feature = (feature) => {
     `;
 
     const { add, has, remove } = cache.favorites;
+
     const span = document.createElement("span");
+    span.className = feature.id;
 
-    const fav = () =>
-      has(feature)
-        ? `<button class="px-2 py-1 text-red-500 font-medium">Remove</button>`
-        : `<button class="px-2 py-1 text-blue-500 font-medium">Add</button>`;
+    const button = () => {
+      if (has(feature)) {
+        return `<button class="px-2 py-1 text-red-500 font-medium">Remove</button>`;
+      } else {
+        return `<button class="px-2 py-1 text-blue-500 font-medium">Add</button>`;
+      }
+    };
 
-    span.innerHTML = fav();
-
+    span.innerHTML = button();
     span.addEventListener("click", () => {
       if (has(feature)) {
         remove(feature);
       } else {
         add(feature);
       }
-      span.innerHTML = fav();
+
+      for (const element of document.getElementsByClassName(feature.id))
+        element.innerHTML = button();
+
       ui.refresh_favorites();
     });
 

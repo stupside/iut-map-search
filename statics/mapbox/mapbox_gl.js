@@ -1,3 +1,5 @@
+const markers = [];
+
 mapboxgl.accessToken = MAPBOX_VARIABLES.TOKEN;
 
 const map = new mapboxgl.Map({
@@ -9,10 +11,15 @@ const map = new mapboxgl.Map({
 
 const mapbox_gl = {
   add_marker(feature) {
-    new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
+    const marker = new mapboxgl.Marker().setLngLat(feature.center);
+    markers.push(marker);
+    marker.addTo(map);
   },
   add_markers(features) {
     for (const feature of features) mapbox_gl.add_marker(feature);
+  },
+  clear_markers() {
+    markers.forEach((marker) => marker.remove());
   },
   fly_to(coordinates) {
     map.flyTo({
