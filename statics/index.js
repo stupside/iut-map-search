@@ -7,13 +7,18 @@ const MAPBOX_VARIABLES = {
 const MAPBOX_GL_VARIABLES = {
   MAP_ID: "map",
   STYLE: "mapbox://styles/mapbox/streets-v11",
-  ZOOM: 9,
-  CENTER: [-74.5, 40],
+  ZOOM: 5,
+  ZOOM_FLY: 15,
+  CENTER: [-74, 40],
 };
 
 const CACHE_VARIABLES = {
   SEARCH: "search",
   SEARCH_RESULT: "search_result",
+};
+
+const FAVORITES_VARIABLES = {
+  FAVORITES: "favorites",
 };
 
 const UI_VARIABLES = {

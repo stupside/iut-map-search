@@ -1,96 +1,146 @@
-const feature_get_zoom_id = (feature) => `zoom_${feature.id}`;
-const feature_get_favorite_id = (feature) => `favorite_${feature.id}`;
-
 const ui_query_label = (value) => {
   const div = document.createElement("div");
-  div.className = "flex bg-blue-300 rounded-2xl py-0.5 px-2 ml-2 text-white";
+  div.className =
+    "flex bg-blue-500 rounded-2xl py-0.5 px-2 ml-2 text-white font-medium";
   div.innerText = value;
   return div;
 };
 
 const ui_feature = (feature) => {
-  const feature_div = document.createElement("div");
-  feature_div.className = "flex flex-col hover:bg-gray-100 rounded-xl p-3";
+  const container = () => {
+    const div = document.createElement("div");
+    div.className = "flex flex-col hover:bg-gray-100 rounded-xl p-3";
 
-  // HEADER
-  const feature_div_header = document.createElement("div");
-  feature_div_header.className = "flex space-between";
-  feature_div_header.innerHTML = `       
-    <div class="
-      hidden
-      md:inline-flex
-      items-center
-      justify-center
-    ">
-      <span
-      class="
-        px-2
-        py-1
-        text-xs
-        font-bold
-        leading-none
-        text-red-100
-        bg-red-600
-        rounded-full
-      "
-      >
-        ${feature.relevance}
-      </span>
-    </div>
-    <span class="mx-4 mr-auto font-bold">${feature.text}</span>
-  `;
-  feature_div.appendChild(feature_div_header);
-  // HEADER
+    return div;
+  };
 
-  // BODY
-  const feature_div_body = document.createElement("div");
-  feature_div_body.className =
-    "bg-white shadow-1xl rounded-3xl my-2 p-4 break-words cursor-pointer";
-  feature_div_body.id = feature_get_zoom_id(feature);
+  const header = () => {
+    const div = document.createElement("div");
+    div.className = "flex space-between";
+    div.innerHTML = `  
+      <div class="
+        hidden
+        md:inline-flex
+        items-center
+        justify-center
+      ">
+        <span
+        class="
+          px-2
+          py-1
+          text-xs
+          font-bold
+          leading-none
+          text-red-100
+          bg-red-500
+          rounded-full
+          font-medium
+        "
+        >
+          ${feature.relevance}
+        </span>
+      </div>
+      <span class="mx-4 mr-auto font-bold">${feature.text}</span>
+    `;
 
-  const contexts = Object.values(feature.context).reduce(
-    (accumulator, value) => {
-      return {
-        ...accumulator,
-        [value.id.split(".")[0]]: value.text,
-      };
-    },
-    {
-      country: undefined,
-      region: undefined,
-      postcode: undefined,
-      place: undefined,
-    }
-  );
-
-  Object.entries(contexts).forEach(([key, value]) => {
+    const { add, has, remove } = favorites;
     const span = document.createElement("span");
-    span.className = "font-bold";
-    span.innerHTML = key;
 
-    feature_div_body.appendChild(span);
-    span.insertAdjacentHTML("afterEnd", `: <span>${value}<span/><br />`);
-  });
+    const fav = () =>
+      has(feature)
+        ? `<button class="px-2 py-1 text-red-500 font-medium">Remove</button>`
+        : `<button class="px-2 py-1 text-blue-500 font-medium">Add</button>`;
 
-  feature_div_body.insertAdjacentHTML(
-    "beforeEnd",
-    `<span class="text-xs mr-5">${feature.properties.category}</span>`
-  );
+    span.innerHTML = fav();
 
-  feature_div_body.addEventListener("click", () =>
-    mapbox_gl.fly_to(feature.center)
-  );
+    span.addEventListener("click", () => {
+      if (has(feature)) {
+        remove(feature);
+      } else {
+        add(feature);
+      }
+      span.innerHTML = fav();
+    });
 
-  feature_div.appendChild(feature_div_body);
-  // BODY
+    div.appendChild(span);
 
-  // FOOTER
-  const feature_div_footer = document.createElement("div");
-  feature_div_footer.innerHTML = `<div><span class="text-md">${feature.place_name}</span></div>`;
-  feature_div.appendChild(feature_div_footer);
-  // FOOTER
+    return div;
+  };
 
-  return feature_div;
+  const footer = () => {
+    const div = document.createElement("div");
+    div.innerHTML = `<div><span class="text-md">${feature.place_name}</span></div>`;
+
+    return div;
+  };
+
+  const body = () => {
+    const div = document.createElement("div");
+    div.className =
+      "bg-white shadow-1xl rounded-3xl my-2 p-4 break-words cursor-pointer";
+
+    const contexts = Object.values(feature.context).reduce(
+      (accumulator, value) => {
+        return {
+          ...accumulator,
+          [value.id.split(".")[0]]: value.text,
+        };
+      },
+      {
+        country: undefined,
+        region: undefined,
+        postcode: undefined,
+        place: undefined,
+      }
+    );
+
+    Object.entries(contexts).forEach(([key, value]) => {
+      const section = document.createElement("section");
+      section.className = "flex items-center mb-0.5";
+
+      section.insertAdjacentHTML(
+        "beforeend",
+        `<span class="font-bold mr-3">${key} :</span>`
+      );
+
+      section.insertAdjacentHTML(
+        "beforeend",
+        ui_skeleton(value, `<span>${value}<span/>`)
+      );
+
+      div.appendChild(section);
+    });
+
+    div.insertAdjacentHTML(
+      "beforeEnd",
+      ui_skeleton(
+        feature.properties.category,
+        `<span class="text-xs mr-5">${feature.properties.category}</span>`
+      )
+    );
+
+    div.addEventListener("click", () => {
+      mapbox_gl.fly_to(feature.center);
+    });
+
+    return div;
+  };
+
+  const _container = container();
+
+  const _body = body();
+  const _header = header();
+  const _footer = footer();
+
+  _container.appendChild(_header);
+  _container.appendChild(_body);
+  _container.appendChild(_footer);
+
+  return _container;
+};
+
+const ui_skeleton = (value, html) => {
+  return value ? html : `<div class="h-4 bg-gray-100 rounded w-1/4"></div>`;
 };
 
 function ui_refresh_empty_div(div) {

@@ -9,7 +9,6 @@ const map = new mapboxgl.Map({
 
 const mapbox_gl = {
   add_marker(feature) {
-    //const div = document.createElement("div");
     new mapboxgl.Marker().setLngLat(feature.center).addTo(map);
   },
   add_markers(features) {
@@ -17,6 +16,7 @@ const mapbox_gl = {
   },
   fly_to(coordinates) {
     map.flyTo({
+      zoom: MAPBOX_GL_VARIABLES.ZOOM_FLY,
       center: coordinates,
       essential: true,
     });
