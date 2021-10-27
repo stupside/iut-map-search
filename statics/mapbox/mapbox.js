@@ -2,7 +2,7 @@ const mapbox = {
   async search(search) {
     if (!search) {
       console.info("mapbox.search", "Empty search parameter");
-      return;
+      return Promise.reject();
     }
 
     const url = get_search_endpoint(search);
@@ -16,7 +16,7 @@ const mapbox = {
       });
   },
   async search_from_cache() {
-    return mapbox.search(cache.get_search());
+    return mapbox.search(cache.search.get());
   },
 };
 

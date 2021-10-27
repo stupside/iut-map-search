@@ -29,6 +29,16 @@ const ui = {
       location_query.appendChild(ui_query_label(query_item));
     }
   },
+  refresh_favorites() {
+    const section = document.getElementById(UI_VARIABLES.FAVORITES_ID);
+
+    ui_refresh_empty_div(section);
+
+    const favorites = Object.entries(cache.favorites.get());
+    for (const [_, value] of favorites) {
+      section.appendChild(ui_feature(value));
+    }
+  },
 };
 
 function on_search_response(json) {
@@ -41,7 +51,7 @@ function on_search_response(json) {
 }
 
 function on_search_change(search) {
-  cache.set_search(search.currentTarget.value);
+  cache.search.set(search.currentTarget.value);
 }
 
 function on_search_button_click() {
@@ -61,7 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
   search.addEventListener("change", on_search_change);
   search_button.addEventListener("click", on_search_button_click);
 
-  search.value = cache.get_search();
+  search.value = cache.search.get();
 
   mapbox.search_from_cache().then(on_search_response);
+  ui.refresh_favorites();
 });

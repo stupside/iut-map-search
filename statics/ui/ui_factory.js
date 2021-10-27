@@ -43,7 +43,7 @@ const ui_feature = (feature) => {
       <span class="mx-4 mr-auto font-bold">${feature.text}</span>
     `;
 
-    const { add, has, remove } = favorites;
+    const { add, has, remove } = cache.favorites;
     const span = document.createElement("span");
 
     const fav = () =>
@@ -60,6 +60,7 @@ const ui_feature = (feature) => {
         add(feature);
       }
       span.innerHTML = fav();
+      ui.refresh_favorites();
     });
 
     div.appendChild(span);

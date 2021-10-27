@@ -15,9 +15,6 @@ const MAPBOX_GL_VARIABLES = {
 const CACHE_VARIABLES = {
   SEARCH: "search",
   SEARCH_RESULT: "search_result",
-};
-
-const FAVORITES_VARIABLES = {
   FAVORITES: "favorites",
 };
 
@@ -26,5 +23,6 @@ const UI_VARIABLES = {
   SEARCH_BUTTON_ID: "search_button",
   QUERY_ID: "query",
   FEATURES_ID: "features",
+  FAVORITES_ID: "favorites",
   FEATURE_ID: "feature",
 };

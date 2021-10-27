@@ -123,20 +123,23 @@
         </header>
 
         <!-- Middle Page Content -->
-        <main class="flex flex-col flex-grow h-full overflow-y-scroll">
+        <main class="flex flex-col flex-grow h-full overflow-y-scroll px-12">
           <!-- Middle Page Content List -->
-          <section id="feature" class="px-8 xl:pl-24 xl:pr-12"></section>
-          <section
-            id="features"
-            class="
-              px-8
-              my-3
-              xl:pl-24 xl:pr-12
-              grid grid-cols-1
-              md:grid-cols-2
-              gap-4
-            "
-          ></section>
+          <section id="feature" class="px-8 mb-6"></section>
+          <div class="mb-6">
+            <h1 class="font-bold ml-4 pb-4 text-2xl">Results</h1>
+            <section
+              id="features"
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+            ></section>
+          </div>
+          <div class="mb-6">
+            <h1 class="font-bold ml-4 pb-4 text-2xl">Favorites</h1>
+            <section
+              id="favorites"
+              class="grid grid-cols-1 md:grid-cols-2 gap-4"
+            ></section>
+          </div>
         </main>
       </section>
     </div>
@@ -147,6 +150,5 @@
     <script type="text/javascript" src="statics/mapbox/mapbox_gl.js"></script>
     <script type="text/javascript" src="statics/ui/ui_factory.js"></script>
     <script type="text/javascript" src="statics/ui/ui.js"></script>
-    <script type="text/javascript" src="statics/favorites.js"></script>
   </body>
 </html>
