@@ -132,7 +132,7 @@ const ui_feature = (feature) => {
     );
 
     div.addEventListener("click", () => {
-      mapbox_gl.fly_to(feature.center);
+      mapbox_gl.fly_to(feature);
     });
 
     return div;
