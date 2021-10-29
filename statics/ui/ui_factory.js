@@ -89,9 +89,13 @@ const ui_feature = (feature) => {
 
     const contexts = Object.values(feature.context).reduce(
       (accumulator, value) => {
+        const id = value.id.split(".")[0];
+
+        if (!Object.keys(accumulator).includes(id)) return accumulator;
+
         return {
           ...accumulator,
-          [value.id.split(".")[0]]: value.text,
+          [id]: value.text,
         };
       },
       {

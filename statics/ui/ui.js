@@ -14,10 +14,11 @@ const ui = {
     ui_refresh_empty_div(feature);
     ui_refresh_empty_div(features_list);
 
-    feature.appendChild(ui_feature(features[0]));
-
-    for (const feature of features.slice(1))
-      features_list.appendChild(ui_feature(feature));
+    if (features) {
+      feature.appendChild(ui_feature(features[0]));
+      for (const feature of features.slice(1))
+        features_list.appendChild(ui_feature(feature));
+    }
 
     mapbox_gl.clear_markers();
     mapbox_gl.add_markers(features);

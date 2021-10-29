@@ -5,7 +5,7 @@ const mapbox = {
       return Promise.reject();
     }
 
-    const url = get_search_endpoint(search);
+    const url = search_endpoint(search);
 
     return fetch(url)
       .then((response) => {
@@ -20,7 +20,7 @@ const mapbox = {
   },
 };
 
-const get_search_endpoint = (query) => {
+const search_endpoint = (query) => {
   return encodeURI(
     `${MAPBOX_VARIABLES.ENDPOINT}/${query}.json?access_token=${MAPBOX_VARIABLES.TOKEN}`
   );
