@@ -1,6 +1,5 @@
-const markers = [];
-
 const MARKERS_SOURCE = "markers";
+const MARKERS_FAVORITES_SOURCE = "markers_favorites";
 
 mapboxgl.accessToken = MAPBOX_VARIABLES.TOKEN;
 
@@ -12,60 +11,58 @@ const map = new mapboxgl.Map({
 });
 
 map.on("load", () => {
-  map.on("click", MARKERS_SOURCE, (event) => {
-    mapbox_gl.fly_to(event.features[0].geometry.coordinates);
-  });
-
-  map.on("mouseenter", MARKERS_SOURCE, () => {
-    map.getCanvas().style.cursor = "pointer";
-  });
-
-  map.on("mouseleave", MARKERS_SOURCE, () => {
-    map.getCanvas().style.cursor = "";
-  });
+  for (const id of [MARKERS_SOURCE, MARKERS_FAVORITES_SOURCE]) {
+    map.on("click", id, (event) => {
+      mapbox_gl.fly_to(event.features[0]);
+    });
+    map.on("mouseenter", id, () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+    map.on("mouseleave", id, () => {
+      map.getCanvas().style.cursor = "";
+    });
+  }
 });
 
 const mapbox_gl = {
-  add_marker(feature) {
-    const marker = new mapboxgl.Marker().setLngLat(feature.center);
-    markers.push(marker);
-    marker.addTo(map);
+  once_loaded(f) {
+    map.on("load", f);
   },
-  add_markers(features) {
-    map.addSource(MARKERS_SOURCE, {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: features,
-      },
-    });
+  add_markers(features, favorites = false) {
+    const source = favorites ? MARKERS_FAVORITES_SOURCE : MARKERS_SOURCE;
+
+    const data = {
+      type: "FeatureCollection",
+      features: features,
+    };
+
+    if (map.getSource(source)) {
+      map.getSource(source).setData(data);
+    } else {
+      map.addSource(source, {
+        type: "geojson",
+        data,
+      });
+    }
+
+    if (map.getLayer(source)) return;
+
     map.addLayer({
-      id: MARKERS_SOURCE,
-      source: MARKERS_SOURCE,
+      id: source,
+      source: source,
       type: "circle",
       paint: {
-        "circle-color": "#4264fb",
+        "circle-color": favorites ? "#fb4242" : "#4264fb",
         "circle-radius": 8,
-        "circle-stroke-width": 3,
+        "circle-stroke-width": 5,
         "circle-stroke-color": "#ffffff",
       },
     });
   },
-  clear_markers() {
-    markers.forEach((marker) => {
-      marker.remove();
-      markers.pop();
-    });
-
-    if (map.getSource(MARKERS_SOURCE)) {
-      map.removeSource(MARKERS_SOURCE);
-      map.removeLayer(MARKERS_SOURCE);
-    }
-  },
-  fly_to(coordinates) {
+  fly_to(feature) {
     map.flyTo({
       zoom: MAPBOX_GL_VARIABLES.ZOOM_FLY,
-      center: coordinates,
+      center: feature.center ?? feature.geometry?.coordinates,
       essential: true,
     });
   },

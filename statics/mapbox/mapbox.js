@@ -1,8 +1,11 @@
 const mapbox = {
   async search(search) {
     if (!search) {
-      console.info("mapbox.search", "Empty search parameter");
-      return Promise.reject();
+      return Promise.reject("mapbox.search - Empty search parameter");
+    }
+
+    if (search.length >= 256) {
+      return Promise.reject("mapbox.search - Search parameter too long");
     }
 
     const url = search_endpoint(search);

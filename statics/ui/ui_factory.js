@@ -87,7 +87,7 @@ const ui_feature = (feature) => {
     div.className =
       "bg-white shadow-1xl rounded-3xl my-2 p-4 break-words cursor-pointer";
 
-    const contexts = Object.values(feature.context).reduce(
+    const contexts = Object.values(feature.context ?? {}).reduce(
       (accumulator, value) => {
         const id = value.id.split(".")[0];
 
