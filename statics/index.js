@@ -6,7 +6,7 @@ const MAPBOX_VARIABLES = {
 
 const MAPBOX_GL_VARIABLES = {
   MAP_ID: "map",
-  STYLE: "mapbox://styles/mapbox/streets-v11",
+  STYLE: "mapbox://styles/mapbox/streets-v11", // mapbox://styles/mapbox/satellite-streets-v11
   ZOOM: 5,
   ZOOM_FLY: 15,
   CENTER: [-74, 40],

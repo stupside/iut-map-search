@@ -32,12 +32,13 @@ const ui = {
       location_query.appendChild(ui_query_label(query_item));
   },
   refresh_favorites() {
-    const section = document.getElementById(UI_VARIABLES.FAVORITES_ID);
+    const favorites = Object.values(cache.favorites.get());
+    const favorites_list = document.getElementById(UI_VARIABLES.FAVORITES_ID);
 
-    ui_refresh_empty_div(section);
+    ui_refresh_empty_div(favorites_list);
 
-    for (const value of Object.values(cache.favorites.get()))
-      section.appendChild(ui_feature(value));
+    for (const favorite of favorites)
+      favorites_list.appendChild(ui_feature(favorite));
   },
 };
 
