@@ -20,6 +20,7 @@ const mapbox_gl = {
   },
   clear_markers() {
     markers.forEach((marker) => marker.remove());
+    markers = [];
   },
   fly_to(coordinates) {
     map.flyTo({

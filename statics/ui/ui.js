@@ -36,7 +36,7 @@ const ui = {
 
     ui_refresh_empty_div(section);
 
-    for (const [_, value] of Object.entries(cache.favorites.get()))
+    for (const value of Object.values(cache.favorites.get()))
       section.appendChild(ui_feature(value));
   },
 };
