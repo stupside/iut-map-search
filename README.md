@@ -1,2 +1,3 @@
-# m4103c-projet-js-2020-2021
-Base de code de départ pour le projet JS "Développement d'une interface pour API publique"
+# Mapbox search
+
+The goal was to use a public API. I used mapbox, and tailwind to make it a little bit better.
